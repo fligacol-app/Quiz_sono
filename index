@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Porque acordo cansado? | Farmácia da Liga</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green: #8dc63f;
+    --green-dark: #6a9e2a;
+    --green-light: #f0f7e0;
+    --gray: #6e7072;
+    --gray-light: #b0b3b5;
+    --dark: #1a1a1a;
+    --cream: #faf9f6;
+    --shadow: 0 20px 60px rgba(0,0,0,0.10);
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--dark); min-height: 100vh; overflow-x: hidden; }
+
+  .hero {
+    background: linear-gradient(135deg, #0d2b1e 0%, #1a4a2e 50%, #2d6e4a 100%);
+    padding: 60px 24px 100px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .logo-wrap {
+    display: inline-block;
+    background: white;
+    border-radius: 16px;
+    padding: 12px 24px;
+    margin-bottom: 36px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .hero-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: var(--green); margin-bottom: 14px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(38px, 6vw, 68px); font-weight: 900; color: white; line-height: 1.1; margin-bottom: 18px; }
+  .hero h1 span { color: var(--green); }
+  .hero-sub { font-size: 16px; color: rgba(255,255,255,0.7); max-width: 480px; margin: 0 auto 32px; line-height: 1.6; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(141,198,63,0.18); border: 1px solid rgba(141,198,63,0.4); border-radius: 100px; padding: 8px 20px; color: var(--green); font-size: 14px; font-weight: 500; }
+
+  .quiz-card { max-width: 660px; margin: -50px auto 48px; background: white; border-radius: 24px; box-shadow: var(--shadow); overflow: hidden; position: relative; z-index: 10; }
+  .card-header { background: var(--green-light); padding: 24px 32px; border-bottom: 1px solid #d8edb8; display: flex; align-items: center; gap: 14px; }
+  .card-header .icon { width: 44px; height: 44px; background: var(--green); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .card-header p { font-size: 14px; color: var(--gray); line-height: 1.5; }
+
+  .question { display: flex; align-items: center; gap: 12px; padding: 16px 32px; border-bottom: 1px solid #f2f2ef; transition: background 0.15s; }
+  .question:last-child { border-bottom: none; }
+  .question.answered-sim { background: #f4fbe8; }
+  .question.answered-nao { background: #fafaf8; }
+  .q-num { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--green); min-width: 22px; flex-shrink: 0; }
+  .q-text { flex: 1; font-size: 15px; color: var(--dark); line-height: 1.4; }
+  .q-toggle { display: flex; gap: 7px; flex-shrink: 0; }
+  .toggle-btn { padding: 6px 16px; border-radius: 100px; border: 1.5px solid #ddd; background: white; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--gray); transition: all 0.18s; }
+  .toggle-btn:hover { border-color: var(--green); color: var(--green-dark); }
+  .toggle-btn.sim.active { background: var(--green); border-color: var(--green); color: white; }
+  .toggle-btn.nao.active { background: #444; border-color: #444; color: white; }
+
+  .btn-wrap { padding: 28px 32px; border-top: 1px solid #f0f0ee; }
+  .btn-result { width: 100%; padding: 17px; background: var(--green); color: white; border: none; border-radius: 14px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.25s; box-shadow: 0 6px 20px rgba(141,198,63,0.35); }
+  .btn-result:hover { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(141,198,63,0.4); }
+
+  .unanswered-warning { display: none; margin: 0 32px 20px; padding: 12px 16px; background: #fff8e1; border: 1px solid #ffe082; border-radius: 10px; font-size: 14px; color: #7a5800; }
+  .unanswered-warning.show { display: block; }
+
+  .result-panel { display: none; max-width: 660px; margin: 0 auto 64px; background: white; border-radius: 24px; box-shadow: var(--shadow); overflow: hidden; }
+  .result-panel.show { display: block; animation: slideUp 0.45s ease; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Logo só visível na impressão */
+  .print-logo { display: none; text-align: center; padding: 24px 32px 0; }
+  .print-logo img { max-width: 180px; margin: 0 auto; }
+
+  .result-header { padding: 44px 32px 32px; text-align: center; }
+  .score-ring { width: 130px; height: 130px; margin: 0 auto 24px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .score-ring svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 44px; font-weight: 900; position: relative; z-index: 1; }
+  .score-label { font-size: 12px; color: var(--gray); position: relative; z-index: 1; }
+  #ring-path { transition: stroke-dashoffset 1.1s cubic-bezier(0.4,0,0.2,1); }
+
+  .result-tag { display: inline-block; padding: 5px 18px; border-radius: 100px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+  .result-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; margin-bottom: 10px; }
+  .result-desc { font-size: 15px; color: var(--gray); line-height: 1.65; max-width: 420px; margin: 0 auto; }
+
+  .r-ok      { background: #e8f7d8; color: #3a7a10; }
+  .r-mid     { background: #fff4d6; color: #8a6200; }
+  .r-bad     { background: #fde8e8; color: #8a1f1f; }
+  .r-critical{ background: #f3e8fd; color: #6a1f8a; }
+  .c-ok      { color: #3a7a10; }
+  .c-mid     { color: #8a6200; }
+  .c-bad     { color: #c0392b; }
+  .c-critical{ color: #6a1f8a; }
+
+  .scale-section { padding: 0 32px 32px; }
+  .scale-label-top { font-size: 13px; color: var(--gray); font-weight: 500; margin-bottom: 6px; }
+  .scale-bar { height: 10px; background: linear-gradient(90deg, #8dc63f 0%, #f0a500 42%, #e74c3c 70%, #9b59b6 100%); border-radius: 100px; position: relative; margin-bottom: 10px; }
+  .scale-marker { position: absolute; top: -5px; width: 20px; height: 20px; background: var(--dark); border: 3px solid white; border-radius: 50%; transform: translateX(-50%); box-shadow: 0 2px 8px rgba(0,0,0,0.28); transition: left 0.9s cubic-bezier(0.34,1.56,0.64,1); left: 0%; }
+  .scale-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray-light); font-weight: 500; line-height: 1.4; }
+
+  /* Mensagem para entregar na farmácia */
+  .farmacia-box { margin: 0 32px 24px; background: var(--green-light); border: 1.5px solid #c5e08a; border-radius: 14px; padding: 20px 24px; text-align: center; }
+  .farmacia-box p { font-size: 14px; color: #3a5a10; line-height: 1.6; }
+  .farmacia-box strong { color: var(--green-dark); font-size: 15px; }
+
+  .cta-box { margin: 0 32px 32px; background: linear-gradient(135deg, #0d2b1e, #1a4a2e); border-radius: 18px; padding: 30px; text-align: center; color: white; }
+  .cta-box h3 { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 8px; }
+  .cta-box p { font-size: 14px; color: rgba(255,255,255,0.68); margin-bottom: 18px; }
+  .btn-cta { background: var(--green); color: white; border: none; padding: 13px 28px; border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.2s; }
+  .btn-cta:hover { background: var(--green-dark); transform: translateY(-1px); }
+
+  .print-section { padding: 0 32px 40px; text-align: center; }
+  .btn-print { display: inline-flex; align-items: center; gap: 9px; padding: 13px 28px; background: white; border: 2px solid var(--green); color: var(--green-dark); border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .btn-print:hover { background: var(--green-light); transform: translateY(-1px); }
+  .btn-print svg { width: 17px; height: 17px; }
+
+  footer { text-align: center; padding: 40px 24px; color: var(--gray-light); font-size: 13px; }
+  footer strong { color: var(--green); }
+
+  /* IMPRESSÃO */
+  @media print {
+    body { background: white !important; }
+    .hero { display: none !important; }
+    .quiz-card { display: none !important; }
+    .btn-wrap, .btn-print, .btn-result, .btn-cta, .print-section, .cta-box, footer { display: none !important; }
+    .result-panel { display: block !important; box-shadow: none !important; border: none !important; margin: 0 !important; }
+
+    /* Logo aparece na impressão */
+    .print-logo { display: block !important; padding: 16px 32px 8px; }
+
+    /* Instrução de entrega aparece na impressão */
+    .farmacia-box { display: block !important; }
+
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+
+  @media (max-width: 600px) {
+    .question { padding: 14px 18px; flex-wrap: wrap; }
+    .q-toggle { width: 100%; justify-content: flex-end; }
+    .card-header, .btn-wrap, .result-header, .scale-section, .cta-box, .print-section { padding-left: 18px; padding-right: 18px; }
+    .cta-box, .farmacia-box { margin-left: 18px; margin-right: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="logo-wrap">
+    <svg width="210" height="54" viewBox="0 0 210 54" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(8,7)">
+        <path d="M22,16 C14,12 7,6 9,1 C11,-3 20,0 20,7" stroke="#b0b3b5" stroke-width="1.4" fill="none"/>
+        <path d="M20,7 C20,13 13,17 9,19 C5,21 3,25 7,27" stroke="#b0b3b5" stroke-width="1.4" fill="none"/>
+        <path d="M7,27 C11,29 17,27 20,23" stroke="#b0b3b5" stroke-width="1.4" fill="none"/>
+        <circle cx="6" cy="13" r="2.5" fill="none" stroke="#b0b3b5" stroke-width="1.1"/>
+      </g>
+      <g transform="translate(42,7)">
+        <rect x="0" y="0" width="40" height="40" rx="9" fill="#8dc63f"/>
+        <rect x="16" y="6" width="8" height="28" rx="2" fill="white"/>
+        <rect x="6" y="16" width="28" height="8" rx="2" fill="white"/>
+      </g>
+      <g transform="translate(92,7)">
+        <path d="M2,16 C10,12 17,6 15,1 C13,-3 4,0 4,7" stroke="#b0b3b5" stroke-width="1.4" fill="none"/>
+        <path d="M4,7 C4,13 11,17 15,19 C19,21 21,25 17,27" stroke="#b0b3b5" stroke-width="1.4" fill="none"/>
+        <path d="M17,27 C13,29 7,27 4,23" stroke="#b0b3b5" stroke-width="1.4" fill="none"/>
+        <circle cx="18" cy="13" r="2.5" fill="none" stroke="#b0b3b5" stroke-width="1.1"/>
+      </g>
+      <text x="108" y="42" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="600" fill="#8dc63f" letter-spacing="0.3">farmáciadaliga</text>
+    </svg>
+  </div>
+  <p class="hero-eyebrow">Teste de Auto-Avaliação</p>
+  <h1>Porque acordo<br><span>cansado?</span></h1>
+  <p class="hero-sub">Responda às perguntas e leve o resultado ao seu farmacêutico da <strong style="color:var(--green)">Farmácia da Liga</strong> para uma recomendação personalizada.</p>
+  <div class="hero-badge">⏱ Teste rápido — apenas 2 minutos</div>
+</div>
+
+<!-- QUIZ CARD -->
+<div class="quiz-card">
+  <div class="card-header">
+    <div class="icon">🌙</div>
+    <p>Selecione <strong>Sim</strong> ou <strong>Não</strong> para cada questão. No final clique em <em>Ver o meu resultado</em>.</p>
+  </div>
+  <div id="questions-wrap"></div>
+  <div class="unanswered-warning" id="warning">
+    ⚠️ Por favor responda a todas as perguntas antes de ver o resultado.
+  </div>
+  <div class="btn-wrap">
+    <button class="btn-result" onclick="calcResult()">Ver o meu resultado →</button>
+  </div>
+</div>
+
+<!-- RESULT PANEL -->
+<div class="result-panel" id="result-panel">
+
+  <!-- LOGO APENAS NA IMPRESSÃO -->
+  <div class="print-logo">
+    <svg width="220" height="58" viewBox="0 0 210 54" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(8,7)">
+        <path d="M22,16 C14,12 7,6 9,1 C11,-3 20,0 20,7" stroke="#b0b3b5" stroke-width="1.4" fill="none"/>
+        <path d="M20,7 C20,13 13,17 9,19 C5,21 3,25 7,27" stroke="#b0b3b5" stroke-width="1.4" fill="none"/>
+        <path d="M7,27 C11,29 17,27 20,23" stroke="#b0b3b5" stroke-width="1.4" fill="none"/>
+        <circle cx="6" cy="13" r="2.5" fill="none" stroke="#b0b3b5" stroke-width="1.1"/>
+      </g>
+      <g transform="translate(42,7)">
+        <rect x="0" y="0" width="40" height="40" rx="9" fill="#8dc63f"/>
+        <rect x="16" y="6" width="8" height="28" rx="2" fill="white"/>
+        <rect x="6" y="16" width="28" height="8" rx="2" fill="white"/>
+      </g>
+      <g transform="translate(92,7)">
+        <path d="M2,16 C10,12 17,6 15,1 C13,-3 4,0 4,7" stroke="#b0b3b5" stroke-width="1.4" fill="none"/>
+        <path d="M4,7 C4,13 11,17 15,19 C19,21 21,25 17,27" stroke="#b0b3b5" stroke-width="1.4" fill="none"/>
+        <path d="M17,27 C13,29 7,27 4,23" stroke="#b0b3b5" stroke-width="1.4" fill="none"/>
+        <circle cx="18" cy="13" r="2.5" fill="none" stroke="#b0b3b5" stroke-width="1.1"/>
+      </g>
+      <text x="108" y="42" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="600" fill="#8dc63f" letter-spacing="0.3">farmáciadaliga</text>
+    </svg>
+  </div>
+
+  <div class="result-header">
+    <div class="score-ring">
+      <svg width="130" height="130" viewBox="0 0 130 130">
+        <circle cx="65" cy="65" r="56" fill="none" stroke="#f0f0ee" stroke-width="10"/>
+        <circle cx="65" cy="65" r="56" fill="none" stroke-width="10" stroke-linecap="round"
+          id="ring-path" stroke-dasharray="352" stroke-dashoffset="352"/>
+      </svg>
+      <div class="score-num" id="score-num">0</div>
+      <div class="score-label">de 14</div>
+    </div>
+    <div class="result-tag" id="result-tag"></div>
+    <div class="result-title" id="result-title"></div>
+    <p class="result-desc" id="result-desc"></p>
+  </div>
+
+  <div class="scale-section">
+    <div class="scale-label-top">A sua posição na escala</div>
+    <div class="scale-bar">
+      <div class="scale-marker" id="scale-marker"></div>
+    </div>
+    <div class="scale-labels">
+      <span>0–3<br>Sono adequado</span>
+      <span style="text-align:center">4–7<br>A melhorar</span>
+      <span style="text-align:center">8–10<br>Possível problema</span>
+      <span style="text-align:right">11+<br>Avaliação urgente</span>
+    </div>
+  </div>
+
+  <!-- MENSAGEM PARA FARMÁCIA (visível na impressão e no ecrã) -->
+  <div class="farmacia-box">
+    <p>📋 <strong>Leve este resultado ao seu farmacêutico da Farmácia da Liga</strong><br>
+    A nossa equipa analisará o seu resultado e recomendará as soluções mais adequadas para si.</p>
+  </div>
+
+  <div class="cta-box">
+    <h3>Fale connosco para um plano personalizado</h3>
+    <p>A nossa equipa está pronta para o ajudar a dormir melhor e acordar com energia.</p>
+    <button class="btn-cta" onclick="window.open('https://www.farmaciadaliga.pt','_blank')">Ir à Farmácia da Liga ↗</button>
+  </div>
+
+  <div class="print-section">
+    <button class="btn-print" onclick="window.print()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"/>
+        <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
+        <rect x="6" y="14" width="12" height="8"/>
+      </svg>
+      Imprimir resultado
+    </button>
+  </div>
+</div>
+
+<footer>
+  <strong>Farmácia da Liga · Gaia</strong><br>
+  Este questionário tem fins informativos e não substitui aconselhamento médico profissional.
+</footer>
+
+<script>
+const questions = [
+  "Dorme menos de 7h por noite?",
+  "Demora mais de 30 min a adormecer?",
+  "Acorda durante a noite?",
+  "Acorda antes do despertador?",
+  "Acorda cansado?",
+  "Precisa de café para funcionar?",
+  "Sente fadiga durante o dia?",
+  "Usa ecrãs antes de dormir?",
+  "Horários de sono irregulares?",
+  "Cafeína após as 17h?",
+  "Stress ou ansiedade?",
+  "Dores à noite?",
+  "Pouco sol diário?",
+  "Défice de vitamina D/ferro?"
+];
+
+const answers = new Array(questions.length).fill(null);
+
+function buildQuestions() {
+  const wrap = document.getElementById('questions-wrap');
+  wrap.innerHTML = questions.map((q, i) => `
+    <div class="question" id="q-row-${i}">
+      <span class="q-num">${String(i + 1).padStart(2,'0')}</span>
+      <span class="q-text">${q}</span>
+      <div class="q-toggle">
+        <button class="toggle-btn sim" id="sim-${i}" onclick="setAnswer(${i},'sim')">Sim</button>
+        <button class="toggle-btn nao" id="nao-${i}" onclick="setAnswer(${i},'nao')">Não</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setAnswer(idx, val) {
+  answers[idx] = val;
+  const row = document.getElementById('q-row-' + idx);
+  document.getElementById('sim-' + idx).classList.toggle('active', val === 'sim');
+  document.getElementById('nao-' + idx).classList.toggle('active', val === 'nao');
+  row.className = 'question answered-' + val;
+  document.getElementById('warning').classList.remove('show');
+}
+
+function calcResult() {
+  const unanswered = answers.indexOf(null);
+  if (unanswered !== -1) {
+    document.getElementById('warning').classList.add('show');
+    document.getElementById('q-row-' + unanswered).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const score = answers.filter(a => a === 'sim').length;
+  let tag, tagClass, title, ringColor, desc;
+
+  if (score <= 3) {
+    tag = '✓ Sono Adequado'; tagClass = 'r-ok';
+    title = 'Está a dormir bem!';
+    desc = 'Os seus hábitos de sono são saudáveis. Continue a manter uma rotina regular para preservar a qualidade do descanso.';
+    ringColor = '#8dc63f';
+  } else if (score <= 7) {
+    tag = '⚡ Hábitos a Melhorar'; tagClass = 'r-mid';
+    title = 'Há espaço para melhorar';
+    desc = 'Alguns hábitos podem estar a prejudicar o seu sono. Pequenas mudanças no dia-a-dia podem fazer uma grande diferença na sua energia.';
+    ringColor = '#f0a500';
+  } else if (score <= 10) {
+    tag = '⚠ Possível Problema de Sono'; tagClass = 'r-bad';
+    title = 'O seu sono precisa de atenção';
+    desc = 'Vários fatores estão a comprometer o seu descanso. Leve este resultado ao seu farmacêutico da Farmácia da Liga para avaliar as soluções mais adequadas para si.';
+    ringColor = '#e74c3c';
+  } else {
+    tag = '🔴 Avaliação Recomendada'; tagClass = 'r-critical';
+    title = 'Consulte um profissional';
+    desc = 'Os seus resultados indicam problemas significativos de sono. Leve este resultado urgentemente ao seu farmacêutico da Farmácia da Liga — temos soluções para si.';
+    ringColor = '#9b59b6';
+  }
+
+  document.getElementById('score-num').textContent = score;
+  document.getElementById('result-tag').textContent = tag;
+  document.getElementById('result-tag').className = 'result-tag ' + tagClass;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-title').className = 'result-title ' + tagClass.replace('r-','c-');
+  document.getElementById('result-desc').textContent = desc;
+
+  const ring = document.getElementById('ring-path');
+  ring.setAttribute('stroke', ringColor);
+  const circumference = 352;
+  const offset = circumference - (score / 14) * circumference;
+  ring.style.strokeDashoffset = circumference;
+  setTimeout(() => { ring.style.strokeDashoffset = offset; }, 80);
+
+  const pct = Math.min((score / 14) * 98, 98);
+  document.getElementById('scale-marker').style.left = pct + '%';
+
+  const panel = document.getElementById('result-panel');
+  panel.classList.add('show');
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+buildQuestions();
+</script>
+</body>
+</html>
