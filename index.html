@@ -171,7 +171,7 @@
   </div>
   <p class="hero-eyebrow">Teste de Auto-Avaliação</p>
   <h1>Porque acordo<br><span>cansado?</span></h1>
-  <p class="hero-sub">Responda às perguntas e leve o resultado ao seu farmacêutico da <strong style="color:var(--green)">Farmácia da Liga</strong> para uma recomendação personalizada.</p>
+  <p class="hero-sub">Responda às perguntas e leve o resultado à <strong style="color:var(--green)">Farmácia da Liga</strong> para uma recomendação personalizada.</p>
   <div class="hero-badge">⏱ Teste rápido — apenas 2 minutos</div>
 </div>
 
@@ -247,14 +247,14 @@
 
   <!-- MENSAGEM PARA FARMÁCIA (visível na impressão e no ecrã) -->
   <div class="farmacia-box">
-    <p>📋 <strong>Leve este resultado ao seu farmacêutico da Farmácia da Liga</strong><br>
+    <p>📋 <strong>Leve este resultado ao seu profissional de farmácia, da Farmácia da Liga</strong><br>
     A nossa equipa analisará o seu resultado e recomendará as soluções mais adequadas para si.</p>
   </div>
 
   <div class="cta-box">
     <h3>Fale connosco para um plano personalizado</h3>
     <p>A nossa equipa está pronta para o ajudar a dormir melhor e acordar com energia.</p>
-    <button class="btn-cta" onclick="window.open('https://www.farmaciadaliga.pt','_blank')">Ir à Farmácia da Liga ↗</button>
+    <button class="btn-cta" onclick="window.open('https://www.farmaciadaliga.pt','_blank')">Ir para Farmácia da Liga (online) ↗</button>
   </div>
 
   <div class="print-section">
@@ -336,17 +336,17 @@ function calcResult() {
   } else if (score <= 7) {
     tag = '⚡ Hábitos a Melhorar'; tagClass = 'r-mid';
     title = 'Há espaço para melhorar';
-    desc = 'Alguns hábitos podem estar a prejudicar o seu sono. Pequenas mudanças no dia-a-dia podem fazer uma grande diferença na sua energia.';
+    desc = 'Alguns hábitos podem estar a prejudicar o seu sono. Pequenas mudanças no dia-a-dia podem fazer uma grande diferença na sua energia. Consulte o nosso Blog.';
     ringColor = '#f0a500';
   } else if (score <= 10) {
     tag = '⚠ Possível Problema de Sono'; tagClass = 'r-bad';
     title = 'O seu sono precisa de atenção';
-    desc = 'Vários fatores estão a comprometer o seu descanso. Leve este resultado ao seu farmacêutico da Farmácia da Liga para avaliar as soluções mais adequadas para si.';
+    desc = 'Vários fatores estão a comprometer o seu descanso. Leve este resultado para que na Farmácia da Liga possam avaliar as soluções mais adequadas para si.';
     ringColor = '#e74c3c';
   } else {
     tag = '🔴 Avaliação Recomendada'; tagClass = 'r-critical';
     title = 'Consulte um profissional';
-    desc = 'Os seus resultados indicam problemas significativos de sono. Leve este resultado urgentemente ao seu farmacêutico da Farmácia da Liga — temos soluções para si.';
+    desc = 'Os seus resultados indicam problemas significativos de sono. Leve este resultado urgentemente ao seu profissional de farmácia. Temos soluções para si.';
     ringColor = '#9b59b6';
   }
 
